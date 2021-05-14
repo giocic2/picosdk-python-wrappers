@@ -117,6 +117,9 @@ on your device.
 To run the unit tests, you will need to install nose (e.g. `pip install nose`.) Then, run `nosetests` in the root of 
 the repo. 
 
+## My personal code (giocic2)
+In my case (giocic2) I use Picoscope 2206B with Raspberry. My code is picoscope-2206B.
+
 ## Obtaining support
 
 Please visit our [Support page](https://www.picotech.com/tech-support) to contact us directly or visit our [Test and Measurement Forum](https://www.picotech.com/support/forum17.html) to post questions.
