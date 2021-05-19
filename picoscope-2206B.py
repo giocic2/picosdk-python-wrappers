@@ -11,9 +11,10 @@ from datetime import datetime
 from itertools import zip_longest
 import os.path
 from math import log
+import time
 
 # Specify sampling frequency
-SAMPLING_FREQUENCY = 50e3 # Hz
+SAMPLING_FREQUENCY = 500e3 # Hz
 if SAMPLING_FREQUENCY >= 125e6:
     timebase = round(log(500e6/SAMPLING_FREQUENCY,2))
     print('Sampling frequency: {:,}'.format(1/(2**timebase/5)*1e8) + ' Hz')
@@ -198,12 +199,12 @@ adc2mVChAMax =  adc2mV(bufferAMax, chARange, maxADC)
 adc2mVChBMax =  adc2mV(bufferBMax, chBRange, maxADC)
 
 # Create time data
-time = np.linspace(0, (cTotalSamples.value) * (timeIntervalns.value-1), cTotalSamples.value)
+timeAxis = np.linspace(0, (cTotalSamples.value) * (timeIntervalns.value-1), cTotalSamples.value)
 print('Done.')
 
 # plot data from channel A and B
-plt.plot(time, adc2mVChAMax[:])
-plt.plot(time, adc2mVChBMax[:])
+plt.plot(timeAxis, adc2mVChAMax[:])
+plt.plot(timeAxis, adc2mVChBMax[:])
 plt.xlabel('Time (ns)')
 plt.ylabel('Voltage (mV)')
 plt.show()
@@ -221,6 +222,7 @@ print('Done.')
 print(status)
 
 # Save raw samples to .csv file (with timestamp)
+startTime = time.time()
 print('Saving raw samples to .csv file...')
 timestamp = datetime.now().strftime("%Y%m%d_%I%M%S_%p")
 
@@ -228,12 +230,13 @@ samplesFileNameChA = timestamp + "_ChA.csv"
 completeFileNameChA = os.path.join('../raw-samples',samplesFileNameChA)
 with open(completeFileNameChA,'w') as file:
     writer = csv.writer(file)
-    writer.writerows(zip(adc2mVChAMax,time))
+    writer.writerows(zip(adc2mVChAMax,timeAxis))
     
 samplesFileNameChB = timestamp + "_ChB.csv"
 completeFileNameChB = os.path.join('../raw-samples',samplesFileNameChB)
 with open(completeFileNameChB,'w') as file:
     writer = csv.writer(file)
-    writer.writerows(zip(adc2mVChBMax,time))
+    writer.writerows(zip(adc2mVChBMax,timeAxis))
+elapsedTime = time.time() - startTime
 
-print('Done.')
+print('Done. Elapsed time for .csv files generation: {:.1f}'.format(elapsedTime) + ' s.')
